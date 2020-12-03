@@ -105,6 +105,86 @@ Como pode ser observado o clone retorna o valor 0, o original recebe o PID do cl
 Mas para que serve isso? Para o nosso propósito precisamos apresentar mais um componente.
 
 ## *exec()*
+Clone : Cara não acredito?
+Alguém : O que foi que aconteceu?
+Clone: Eu não passo de um mero clone.
+Alguém: Não cara, não diga isso você pode ser um clone mas você pode seguir o seu próprio caminho, ser o que quiser ser.
+Clone: Sério?
+Alguém: Sim você precisa somente de um contexto, e assim seguir o seu próprio caminho.
+Clone: Nossa isso seria ótimo mas como eu faço isso?
+Alguém: Temos um recurso bastante versátil conhecido como _exec_, com ele é possível carregar um outro programa, que trocará todo o contexto anterior, e você será promovido, dessa forma você pode ser que você quiser.
+
+O _exec_ é um _system call_ capaz de carregar outro programa, trocando todo o contexto do programa que o invoca. O _exec_ possui várias formas de ser utilizado e suas variações se devem ao passar do tempo programadores o adaptavam conforme suas necessidades resultando nessa quantidade de funções, para melhor atendê-lo verifique o _man pages_ para maiores informações sobre o _exec_:
+
+
+<ul>
+    <li>int execl(const char *path, const char *arg, .../* (char  *) NULL */);</li>
+    <li>int execlp(const char *file, const char *arg, ... /* (char  *) NULL */);</li>
+    <li>int execle(const char *path, const char *arg, ... /*, (char *) NULL, char * const envp[]*/);</li>
+    <li>int execv(const char *path, char *const argv[]);</li>
+    <li>int execvp(const char *file, char *const argv[]);</li>
+    <li>int execvpe(const char *file, char *const argv[], char *const envp[]);</li>
+</ul>
+
+Para exemplicar vamos criar uma outra aplicação
+
+O programa a seguir é o responsável pela criação do clone. após clonado o programa clone decide que quer se tornar um contador e seguir carreira nessa área.
+
+```c
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+int main(void)
+{
+    pid_t is_clone = fork();
+    
+    if(is_clone == -1)
+    {
+        printf("Não foi possivel gerar um clone.\n");
+    }
+    else if( is_clone == 0)
+    {
+        printf("Eu sou o clone mas posso ser o que eu quiser.\n");
+        printf("Vou virar um contador.\n");
+        char *args[]={"./counter",NULL}; 
+        execvp(args[0],args); 
+        /* se der certo o programa não retorna */
+    }else
+    {
+        printf("Eu sou o verdadeiro.\n");
+    }
+    return 0;
+}
+```
+
+O programa a seguir apresenta em um novo momento, talvez um momento de realização para o clone, que mesmo sendo um clone pode decidir qual caminho trilhar, e decidiu virar um contador, muito bom meu caro amigo persiga o seu sonho.
+
+```c
+#include <stdio.h>
+
+/* Programa chamado pelo exec */
+
+void delay(void)
+{
+    for(int i = 0; i < 100; i++)
+        for(int j = 0; j < 1000; j++);
+}
+
+int main()
+{
+    for(int i = 0; i < 10; i++)
+    {
+        printf("%d ", i);
+        delay();
+    }
+
+    printf("\n");
+    return 0;
+}
+```
+
 ## Conclusão
 Neste artigo foi apresentado como se utiliza o _fork_ atráves de alguns exemplos simples, e como utilizar o clone para invocar um outra aplicação utilizando o comando _exec_. No próximo artigo iremos abordar o primeiro IPC, o *shared file*. E finalizamos mais um artigo com um final feliz e que nosso clone possa realizar outras atividades se tornando o que ele quiser.
 
