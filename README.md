@@ -186,6 +186,6 @@ int main()
 ```
 
 ## Conclusão
-Neste artigo foi apresentado como se utiliza o _fork_ atráves de alguns exemplos simples, e como utilizar o clone para invocar um outra aplicação utilizando o comando _exec_. No próximo artigo iremos abordar o primeiro IPC, o *shared file*. E finalizamos mais um artigo com um final feliz e que nosso clone possa realizar outras atividades se tornando o que ele quiser.
+Neste artigo foi apresentado como se utiliza o _fork_ atráves de alguns exemplos simples, e como utilizar o clone para invocar um outra aplicação utilizando o comando _exec_.
 
 
