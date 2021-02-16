@@ -1,6 +1,17 @@
-![Fork e Exec](https://www.cse.unsw.edu.au/~cs1521/18s2/lectures/week07/Pics/processes/fork-exec.png)
+<p align="center">
+    <img src="https://www.cse.unsw.edu.au/~cs1521/18s2/lectures/week07/Pics/processes/fork-exec.png" />
+</p>
 
 # _fork()_ e _exec()_ *System Call*
+
+## Tópicos
+* [Introdução](#introdução)
+* [fork](#fork)
+* [exec](#exec)
+* [Conclusão](#conclusão)
+* [Referências](#referências)
+
+
 ## Introdução
 No artigo anterior descreveu a biblioteca hardware que necessária para viabilizar o desenvolvimento dos exemplos, com o desenvolvimento da camada abstração concluída e instalada. Mas para prossegir ainda falta um passo de extrema
 importância que será abordado nesse artigo que são a combinação de _fork_ e _exec_.
@@ -65,7 +76,9 @@ Quem eh voce? Eu sou o processo de pid 19490.
 
 Oh não, isso deve ser um pesadelo é o ataque dos clones. Hey vai com calma não é isso que você está pensando, isso é só um Jutsu Clone das sombras, é uma técnica para poder dividir o trabalho. Bom isso seria útil para realizar as tarefas de casa. Bom a figura abaixo demonstra o que ocorre durante o _fork_:
 
-![Processo sendo clonado](https://indradhanush.github.io/images/shell-part-2/execvp.jpg)
+<p align="center">
+    <img src="https://indradhanush.github.io/images/shell-part-2/execvp.jpg"/>
+</p>
 
 Como apresentado na figura é possível notar que o fluxo é ramificado após a execução do _fork_, para verificar quem é quem, com o retorno do _fork_ é possível distiguir qual processo é qual. Vejamos mais um exemplo para demonstrar o resultado do _fork_:
 
@@ -117,14 +130,24 @@ Alguém: Temos um recurso bastante versátil conhecido como _exec_, com ele é p
 O _exec_ é um _system call_ capaz de carregar outro programa, trocando todo o contexto do programa que o invoca. O _exec_ possui várias formas de ser utilizado e suas variações se devem ao passar do tempo programadores o adaptavam conforme suas necessidades resultando nessa quantidade de funções, para melhor atendê-lo verifique o _man pages_ para maiores informações sobre o _exec_:
 
 
-<ul>
-    <li>int execl(const char *path, const char *arg, .../* (char  *) NULL */);</li>
-    <li>int execlp(const char *file, const char *arg, ... /* (char  *) NULL */);</li>
-    <li>int execle(const char *path, const char *arg, ... /*, (char *) NULL, char * const envp[]*/);</li>
-    <li>int execv(const char *path, char *const argv[]);</li>
-    <li>int execvp(const char *file, char *const argv[]);</li>
-    <li>int execvpe(const char *file, char *const argv[], char *const envp[]);</li>
-</ul>
+```c
+int execl(const char *path, const char *arg, .../* (char  *) NULL */);
+```
+```c
+int execlp(const char *file, const char *arg, ... /* (char  *) NULL */);
+```
+```c
+int execle(const char *path, const char *arg, ... /*, (char *) NULL, char * const envp[]*/);
+```
+```c
+int execv(const char *path, char *const argv[]);
+```
+```c
+int execvp(const char *file, char *const argv[]);
+```
+```c
+int execvpe(const char *file, char *const argv[], char *const envp[]);
+```
 
 Para exemplicar vamos criar uma outra aplicação
 
@@ -188,4 +211,5 @@ int main()
 ## Conclusão
 Neste artigo foi apresentado como se utiliza o _fork_ atráves de alguns exemplos simples, e como utilizar o clone para invocar um outra aplicação utilizando o comando _exec_.
 
-
+## Referências
+* [Linux Programming Interface](https://www.amazon.com.br/dp/B004OEJMZM/ref=dp-kindle-redirect?_encoding=UTF8&btkr=1)
