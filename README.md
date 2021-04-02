@@ -209,7 +209,7 @@ int main()
 ```
 
 ## *daemon()*
-Basicamente _daemon_ é uma instância que roda em segundo plano, sem a interação de _STDIN_, _STDOUT_ e _STDERR_. Normalmente fornece algum tipo de serviço como por exemplo o sshd(security shell daemon) que ouve conexões usando protocolo ssh e atua como servidor para o protocolo, possui um ciclo de vida desde o _power on_ da máquina até o _shutdown_(caso não haja _segfault_ ;P). No tópico de _fork_, é gerado uma cópia do programa corrente, esse programa filho é uma espécie de daemon, pois roda em segundo plano após o _fork_. Para a criação de um _daemon_ existe um roteiro onde alguns passos devem ser seguidos, e existem também uma _system call_ que abstrai todo o processo de criação:
+Basicamente _daemon_ é uma instância que roda em segundo plano, sem a interação de _STDIN_, _STDOUT_ e _STDERR_. Normalmente fornece algum tipo de serviço como por exemplo o sshd(security shell daemon) que ouve conexões usando protocolo ssh e atua como servidor para o protocolo, possui um ciclo de vida desde o _power on_ da máquina até o _shutdown_(caso não haja _segfault_ ;P). No tópico de _fork_, é gerado uma cópia do programa corrente, esse programa filho é uma espécie de daemon, pois roda em segundo plano após o _fork_. Para a criação de um _daemon_ existe um roteiro onde alguns passos devem ser seguidos, e existe também uma _system call_ que abstrai todo o processo de criação:
 
 ### Criação pelo modelo tradicional
 * Gerar o clone do processo através do _fork_ para que o processo rode em background
@@ -325,7 +325,7 @@ int main(int argc, char* argv[])
 
 ### Criação pela _system call_
 
-Existe uma _system call_ capaz de abstrair tudo isso em uma única chamada
+A _system call daemon_ capaz de abstrair tudo isso em uma única chamada
 ```c
 #include <unistd.h>
 
