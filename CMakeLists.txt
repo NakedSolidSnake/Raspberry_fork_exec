@@ -33,3 +33,24 @@ target_sources(counter
   )
  
 install(TARGETS counter DESTINATION bin)
+
+
+#build daemon_standard
+add_executable(daemon_standard "")
+
+target_sources(daemon_standard
+  PUBLIC 
+  ${CMAKE_CURRENT_LIST_DIR}/src/daemon_standard.c
+  )
+ 
+install(TARGETS daemon_standard DESTINATION bin)
+
+#build daemon_systemcall
+add_executable(daemon_systemcall "")
+
+target_sources(daemon_systemcall
+  PUBLIC 
+  ${CMAKE_CURRENT_LIST_DIR}/src/daemon_systemcall.c
+  )
+ 
+install(TARGETS daemon_systemcall DESTINATION bin)
