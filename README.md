@@ -2,19 +2,19 @@
     <img src="https://www.cse.unsw.edu.au/~cs1521/18s2/lectures/week07/Pics/processes/fork-exec.png" />
 </p>
 
-# _fork()_ e _exec()_ *System Call*
+# _fork()_, _exec()_ e _daemon()_ *System Call*
 
 ## Tópicos
 * [Introdução](#introdução)
 * [fork](#fork)
 * [exec](#exec)
+* [daemon](#daemon)
 * [Conclusão](#conclusão)
 * [Referências](#referências)
 
 
 ## Introdução
-No artigo anterior descreveu a biblioteca hardware que necessária para viabilizar o desenvolvimento dos exemplos, com o desenvolvimento da camada abstração concluída e instalada. Mas para prossegir ainda falta um passo de extrema
-importância que será abordado nesse artigo que são a combinação de _fork_ e _exec_.
+No artigo anterior descreveu a biblioteca hardware que necessária para viabilizar o desenvolvimento dos exemplos, com o desenvolvimento da camada abstração concluída e instalada. Mas para prossegir ainda falta um passo de extrema importância que será abordado nesse artigo que são a combinação de _fork_ e _exec_, e a definição do que é um _daemon_.
 ## *fork()*
 O _fork()_ é um *system call* capaz de criar um novo processo denominado filho, que é uma cópia exata do processo original denominado pai. Para utilizar o _fork()_ é necessário incluir os seguintes _includes_:
 ```c
@@ -208,8 +208,162 @@ int main()
 }
 ```
 
+## *daemon()*
+Basicamente _daemon_ é uma instância que roda em segundo plano, sem a interação de _STDIN_, _STDOUT_ e _STDERR_. Normalmente fornece algum tipo de serviço como por exemplo o sshd(security shell daemon) que ouve conexões usando protocolo ssh e atua como servidor para o protocolo, possui um ciclo de vida desde o _power on_ da máquina até o _shutdown_(caso não haja _segfault_ ;P). No tópico de _fork_, é gerado uma cópia do programa corrente, esse programa filho é uma espécie de daemon, pois roda em segundo plano após o _fork_. Para a criação de um _daemon_ existe um roteiro onde alguns passos devem ser seguidos, e existem também uma _system call_ que abstrai todo o processo de criação:
+
+### Criação pelo modelo tradicional
+* Gerar o clone do processo através do _fork_ para que o processo rode em background
+```c
+process_id = fork();
+if(process_id < 0)
+{
+printf("fork falhou.\n");
+exit(1);
+}
+
+if(process_id > 0)
+{
+printf("PID do processo filho %d\n", process_id);
+exit(0);
+}
+```
+* Alterar as permissões de acesso, para esse caso o argumento 0 significa que as permissões serão herdadas
+```c
+umask(0);
+```
+* Criar uma nova sessão 
+```c
+sid = setsid();
+if(sid < 0)
+{
+exit(1);
+}
+```
+* Configurar o diretório de trabalho
+```c
+chdir("/");
+```
+
+* Fechar a entrada padrão, a saída padrão e a saída de erro padrão
+```c
+close(STDIN_FILENO);
+close(STDOUT_FILENO);
+close(STDERR_FILENO);
+```
+* Executar o serviço proposto, que vai logar a contagem a cada um segundo
+```c
+int i = 0;
+
+  while(1)
+  {
+    call_log(i++);
+    sleep(1);
+  }
+```
+
+Aqui está a descrição completa do exemplo
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <string.h>
+#include <syslog.h>
+
+void call_log(int counter)
+{
+    openlog("Daemon", LOG_PID | LOG_CONS , LOG_USER);
+    syslog(LOG_INFO, "Counter : %d", counter);
+    closelog();
+}
+
+int main(int argc, char* argv[])
+{
+  pid_t process_id = 0;
+  pid_t sid = 0;
+
+  process_id = fork();
+  if(process_id < 0)
+  {
+    printf("fork falhou.\n");
+    exit(1);
+  }
+
+  if(process_id > 0)
+  {
+    printf("PID do processo filho %d\n", process_id);
+    exit(0);
+  }
+
+  umask(0);
+
+  sid = setsid();
+  if(sid < 0)
+  {
+    exit(1);
+  }
+
+  chdir("/");
+
+  close(STDIN_FILENO);
+  close(STDOUT_FILENO);
+  close(STDERR_FILENO);
+
+
+  int i = 0;
+
+  while(1)
+  {
+    call_log(i++);
+    sleep(1);
+  }
+  
+  return 0;
+}
+```
+
+### Criação pela _system call_
+
+Existe uma _system call_ capaz de abstrair tudo isso em uma única chamada
+```c
+#include <unistd.h>
+
+int daemon(int nochdir, int noclose);
+```
+
+O mesmo exemplo usando _daemon_ _system call_
+```c
+#include <stdio.h>
+#include <syslog.h>
+#include <unistd.h>
+#include <stdbool.h>
+
+void call_log(int counter)
+{
+    openlog("Daemon", LOG_PID | LOG_CONS , LOG_USER);
+    syslog(LOG_INFO, "Counter : %d", counter);
+    closelog();
+}
+
+int main(int argc, char *argv[])
+{
+    int i = 0;
+
+    daemon(0, 0);    
+    
+    while(true)
+    {
+        call_log(i++);
+        sleep(1);
+    }
+    return 0;
+}
+```
+
 ## Conclusão
-Neste artigo foi apresentado como se utiliza o _fork_ atráves de alguns exemplos simples, e como utilizar o clone para invocar um outra aplicação utilizando o comando _exec_.
+Neste artigo foi apresentado como se utiliza o _fork_ atráves de alguns exemplos simples, e como utilizar o clone para invocar um outra aplicação utilizando o comando _exec_, dessa forma podemos criar serviços para rodem .
 
 ## Referências
 * [Linux Programming Interface](https://www.amazon.com.br/dp/B004OEJMZM/ref=dp-kindle-redirect?_encoding=UTF8&btkr=1)
+* [daemon](https://www.go4expert.com/articles/writing-linux-daemon-process-c-t27616/)
