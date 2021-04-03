@@ -14,7 +14,8 @@
 
 
 ## Introdução
-No artigo anterior descreveu a biblioteca hardware que necessária para viabilizar o desenvolvimento dos exemplos, com o desenvolvimento da camada abstração concluída e instalada. Mas para prossegir ainda falta um passo de extrema importância que será abordado nesse artigo que são a combinação de _fork_ e _exec_, e a definição do que é um _daemon_.
+No artigo [anterior](https://github.com/NakedSolidSnake/Raspberry_lib_hardware) descreveu a biblioteca hardware que é necessária para viabilizar o desenvolvimento dos exemplos, com o desenvolvimento da camada abstração concluída e instalada, e as pendências resolvidas, ainda necessitamos de alguns conceitos para prosseguir  que são a combinação de _fork_ e _exec_, e a definição do que é um _daemon_.
+
 ## *fork()*
 O _fork()_ é um *system call* capaz de criar um novo processo denominado filho, que é uma cópia exata do processo original denominado pai. Para utilizar o _fork()_ é necessário incluir os seguintes _includes_:
 ```c
@@ -45,14 +46,15 @@ hello world.
 hello world.
 ```
 
-O resultado do código anterior resultou em uma grande confusão agora é necessário explicar o que ocorre por de trás das cortinas.Pessoa : Duas _strings hello world_?
-Alguém : Isso mesmo, uma mensagem do processo original e outro do processo clone.
-Pessoa : Mas como é possível haver um clone?
-Alguém : Não acredita? Tudo bem então vamos provar.
-Pessoa : Mas como fazer isso?
-Alguém : Bom para isso precisamos encontrar evidências sobre esse mistério.
-Pessoa : Como pode apresentar duas mensagens sendo que o programa é um só? E somente existe uma ocorrência de _printf_. Bizarro.
-Alguém : Não nos resta alternativa, precisamos interrogar, vamos perguntar para o programa quem é ele com a função _getpid_.
+O resultado do código anterior resultou em uma grande confusão agora é necessário explicar o que ocorre por de trás das cortinas.
+* Pessoa : Duas _strings hello world_?
+* Alguém : Isso mesmo, uma mensagem do processo original e outro do processo clone.
+* Pessoa : Mas como é possível haver um clone?
+* Alguém : Não acredita? Tudo bem então vamos provar.
+* Pessoa : Mas como fazer isso?
+* Alguém : Bom para isso precisamos encontrar evidências sobre esse mistério.
+* Pessoa : Como pode apresentar duas mensagens sendo que o programa é um só? E somente existe uma ocorrência de _printf_. Bizarro.
+* Alguém : Não nos resta alternativa, precisamos interrogar, vamos perguntar para o programa quem é ele com a função _getpid_.
 
 ```c
 #include <sys/types.h>
@@ -74,7 +76,7 @@ Quem eh voce? Eu sou o processo de pid 19489.
 Quem eh voce? Eu sou o processo de pid 19490.
 ```
 
-Oh não, isso deve ser um pesadelo é o ataque dos clones. Hey vai com calma não é isso que você está pensando, isso é só um Jutsu Clone das sombras, é uma técnica para poder dividir o trabalho. Bom isso seria útil para realizar as tarefas de casa. Bom a figura abaixo demonstra o que ocorre durante o _fork_:
+Oh não, isso deve ser um pesadelo é o ataque dos clones. Hey vai com calma não é isso que você está pensando, isso é só um Jutsu Clone das sombras, é uma técnica para poder dividir o trabalho. Bom isso seria útil para realizar as tarefas de casa. A figura abaixo demonstra o que ocorre durante o _fork_:
 
 <p align="center">
     <img src="https://indradhanush.github.io/images/shell-part-2/execvp.jpg"/>
@@ -118,14 +120,14 @@ Como pode ser observado o clone retorna o valor 0, o original recebe o PID do cl
 Mas para que serve isso? Para o nosso propósito precisamos apresentar mais um componente.
 
 ## *exec()*
-Clone : Cara não acredito?
-Alguém : O que foi que aconteceu?
-Clone: Eu não passo de um mero clone.
-Alguém: Não cara, não diga isso você pode ser um clone mas você pode seguir o seu próprio caminho, ser o que quiser ser.
-Clone: Sério?
-Alguém: Sim você precisa somente de um contexto, e assim seguir o seu próprio caminho.
-Clone: Nossa isso seria ótimo mas como eu faço isso?
-Alguém: Temos um recurso bastante versátil conhecido como _exec_, com ele é possível carregar um outro programa, que trocará todo o contexto anterior, e você será promovido, dessa forma você pode ser que você quiser.
+* Clone : Cara não acredito?
+* Alguém : O que foi que aconteceu?
+* Clone: Eu não passo de um mero clone.
+* Alguém: Não cara, não diga isso você pode ser um clone mas você pode seguir o seu próprio caminho, ser o que quiser ser.
+* Clone: Sério?
+* Alguém: Sim você precisa somente de um contexto, e assim seguir o seu próprio caminho.
+* Clone: Nossa isso seria ótimo mas como eu faço isso?
+* Alguém: Temos um recurso bastante versátil conhecido como _exec_, com ele é possível carregar um outro programa, que trocará todo o contexto anterior, e você será promovido, dessa forma você pode ser que você quiser.
 
 O _exec_ é um _system call_ capaz de carregar outro programa, trocando todo o contexto do programa que o invoca. O _exec_ possui várias formas de ser utilizado e suas variações se devem ao passar do tempo programadores o adaptavam conforme suas necessidades resultando nessa quantidade de funções, para melhor atendê-lo verifique o _man pages_ para maiores informações sobre o _exec_:
 
@@ -209,6 +211,10 @@ int main()
 ```
 
 ## *daemon()*
+* Alguém: Agora como tudo foi esclarecido vamos ver o que é o daemon.
+* Pessoa: Demon? Que isso cara?
+* Alguém: Não Demon, mas sim daemon, que coisa não?
+
 Basicamente _daemon_ é uma instância que roda em segundo plano, sem a interação de _STDIN_, _STDOUT_ e _STDERR_. Normalmente fornece algum tipo de serviço como por exemplo o sshd(security shell daemon) que ouve conexões usando protocolo ssh e atua como servidor para o protocolo, possui um ciclo de vida desde o _power on_ da máquina até o _shutdown_(caso não haja _segfault_ ;P). No tópico de _fork_, é gerado uma cópia do programa corrente, esse programa filho é uma espécie de daemon, pois roda em segundo plano após o _fork_. Para a criação de um _daemon_ existe um roteiro onde alguns passos devem ser seguidos, e existe também uma _system call_ que abstrai todo o processo de criação:
 
 ### Criação pelo modelo tradicional
@@ -362,7 +368,7 @@ int main(int argc, char *argv[])
 ```
 
 ## Conclusão
-Neste artigo foi apresentado como se utiliza o _fork_ atráves de alguns exemplos simples, e como utilizar o clone para invocar um outra aplicação utilizando o comando _exec_, dessa forma podemos criar serviços para rodem .
+Neste artigo foi apresentado como se utiliza o _fork_ atráves de alguns exemplos simples, e como utilizar o clone para invocar um outra aplicação utilizando o comando _exec_, dessa forma podemos criar serviços para prover algumas funcionalidades para o sistema. No próximo [artigo](https://github.com/NakedSolidSnake/Raspberry_IPC_Pipe) apresentarei o primeiro _IPC_ o _PIPE_.
 
 ## Referências
 * [Linux Programming Interface](https://www.amazon.com.br/dp/B004OEJMZM/ref=dp-kindle-redirect?_encoding=UTF8&btkr=1)
