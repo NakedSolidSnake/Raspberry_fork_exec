@@ -14,7 +14,7 @@
 
 
 ## Introdução
-No artigo [anterior](https://github.com/NakedSolidSnake/Raspberry_lib_hardware) descreveu a biblioteca hardware que é necessária para viabilizar o desenvolvimento dos exemplos, com o desenvolvimento da camada abstração concluída e instalada, e as pendências resolvidas, ainda necessitamos de alguns conceitos para prosseguir  que são a combinação de _fork_ e _exec_, e a definição do que é um _daemon_.
+O artigo [anterior](https://github.com/NakedSolidSnake/Raspberry_lib_hardware) descreveu a biblioteca hardware que é necessária para viabilizar o desenvolvimento dos exemplos, com o desenvolvimento da camada abstração concluída e instalada, e as pendências resolvidas, ainda necessitamos de alguns conceitos para prosseguir  que são a combinação de _fork_ e _exec_, e a definição do que é um _daemon_.
 
 ## *fork()*
 O _fork()_ é um *system call* capaz de criar um novo processo denominado filho, que é uma cópia exata do processo original denominado pai. Para utilizar o _fork()_ é necessário incluir os seguintes _includes_:
