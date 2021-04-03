@@ -371,5 +371,5 @@ int main(int argc, char *argv[])
 Neste artigo foi apresentado como se utiliza o _fork_ atráves de alguns exemplos simples, e como utilizar o clone para invocar um outra aplicação utilizando o comando _exec_, dessa forma podemos criar serviços para prover algumas funcionalidades para o sistema. No próximo [artigo](https://github.com/NakedSolidSnake/Raspberry_IPC_Pipe) apresentarei o primeiro _IPC_ o _PIPE_.
 
 ## Referências
-* [Linux Programming Interface](https://www.amazon.com.br/dp/B004OEJMZM/ref=dp-kindle-redirect?_encoding=UTF8&btkr=1)
+* [Mark Mitchell, Jeffrey Oldham, and Alex Samuel - Advanced Linux Programming](https://www.amazon.com.br/Advanced-Linux-Programming-CodeSourcery-LLC/dp/0735710430)
 * [daemon](https://www.go4expert.com/articles/writing-linux-daemon-process-c-t27616/)
