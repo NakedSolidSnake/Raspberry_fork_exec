@@ -14,7 +14,7 @@
 
 
 ## Introdução
-O artigo [anterior](https://github.com/NakedSolidSnake/Raspberry_lib_hardware) descreveu a biblioteca hardware que é necessária para viabilizar o desenvolvimento dos exemplos, com o desenvolvimento da camada abstração concluída e instalada, e as pendências resolvidas, ainda necessitamos de alguns conceitos para prosseguir  que são a combinação de _fork_ e _exec_, e a definição do que é um _daemon_.
+O artigo [anterior](https://github.com/NakedSolidSnake/Raspberry_lib_hardware) descreveu a biblioteca hardware que é necessária para viabilizar o desenvolvimento dos exemplos, com o desenvolvimento da camada abstração concluída e instalada, e as pendências resolvidas, ainda necessitamos de alguns conceitos para prosseguir  que são a combinação de _fork_ e _exec_, e a definição do que é um _daemon_, que serão de vital importância para os próximos artigos, que seguirão esse modelo.
 
 ## *fork()*
 O _fork()_ é um *system call* capaz de criar um novo processo denominado filho, que é uma cópia exata do processo original denominado pai. Para utilizar o _fork()_ é necessário incluir os seguintes _includes_:
@@ -368,7 +368,7 @@ int main(int argc, char *argv[])
 ```
 
 ## Conclusão
-Neste artigo foi apresentado como se utiliza o _fork_ atráves de alguns exemplos simples, e como utilizar o clone para invocar um outra aplicação utilizando o comando _exec_, dessa forma podemos criar serviços para prover algumas funcionalidades para o sistema. No próximo [artigo](https://github.com/NakedSolidSnake/Raspberry_IPC_Pipe) apresentarei o primeiro _IPC_ o _PIPE_.
+Neste artigo foi apresentado como se utiliza o _fork_ atráves de alguns exemplos simples, e como utilizar o clone para invocar um outra aplicação utilizando o comando _exec_, dessa forma podemos criar serviços para prover algumas funcionalidades para o sistema na forma de _daemon_. No próximo [artigo](https://github.com/NakedSolidSnake/Raspberry_IPC_Pipe) apresentarei o primeiro _IPC_ o _PIPE_.
 
 ## Referências
 * [Mark Mitchell, Jeffrey Oldham, and Alex Samuel - Advanced Linux Programming](https://www.amazon.com.br/Advanced-Linux-Programming-CodeSourcery-LLC/dp/0735710430)
